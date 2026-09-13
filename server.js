@@ -7,22 +7,10 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const app = express();
+app.use(cors());
 const PORT = Number(process.env.PORT) || 1111;
 const apiKey = process.env.GEMINI_API_KEY;
 
-const allowedOrigins = new Set((process.env.ALLOWED_ORIGINS || [
-  'https://mondobijeljina.com',
-  'https://www.mondobijeljina.com',
-  'http://localhost:1111',
-  'http://127.0.0.1:1111'
-].join(',')).split(',').map(origin => origin.trim()).filter(Boolean));
-
-app.use(cors({
-  origin(origin, callback) {
-    if (!origin || allowedOrigins.has(origin)) return callback(null, true);
-    return callback(new Error('Origin nije dozvoljen.'));
-  }
-}));
 app.use(express.json({ limit: '64kb' }));
 app.use(express.static(__dirname));
 
