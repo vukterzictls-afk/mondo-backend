@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<!-- Local copy of Mondo caffe & ristorante — ready for deployment -->
+<html lang="sr" class="scroll-smooth"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mondo caffe &amp; ristorante | Bijeljina</title>
+    
+    <!-- Google Fonts: Playfair Display for headings, Montserrat for body text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&amp;family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&amp;display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS for responsive layout and styling -->
+    <script src="https://cdn.tailwindcss.com/"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#1a1a1a',
+                        gold: '#D4AF37',
+                        cream: '#f9f6f0',
+                        light_gray: '#cccccc'
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            color-scheme: dark;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            background-color: #1a1a1a;
+            color: #f9f6f0;
+            font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        html, body {
+            min-width: 320px;
+            min-height: 100%;
+        }
+
+        a, button {
+            -webkit-tap-highlight-color: transparent;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button, input, select, textarea {
+            font: inherit;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        img, svg {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            vertical-align: middle;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        h1, h2, h3, h4, p {
+            margin: 0;
+        }
+
+        section[id] {
+            scroll-margin-top: 100px;
+        }
+
+        .hero-bg,
+        .story-bg,
+        .bg-dark,
+        .bg-cream,
+        .bg-\[#111111\] {
+            background-attachment: scroll !important;
+        }
+
+        .btn-gold,
+        .btn-gold-filled,
+        .btn-dark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.2;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* Custom Button Styles */
+        .btn-gold {
+            background-color: transparent;
+            border: 2px solid #D4AF37;
+            color: #D4AF37;
+            transition: all 0.3s ease;
+        }
+        .btn-gold:hover {
+            background-color: #D4AF37;
+            color: #1a1a1a;
+        }
+        .btn-gold-filled {
+            background-color: #D4AF37;
+            border: 2px solid #D4AF37;
+            color: #1a1a1a;
+            transition: all 0.3s ease;
+        }
+        .btn-gold-filled:hover {
+            background-color: transparent;
+            color: #D4AF37;
+        }
+        .btn-dark {
+            background-color: transparent;
+            border: 2px solid #1a1a1a;
+            color: #1a1a1a;
+            transition: all 0.3s ease;
+        }
+        .btn-dark:hover {
+            background-color: #1a1a1a;
+            color: #f9f6f0;
+        }
+
+        /* Hero Image Overlay */
+        .hero-bg {
+            background-image: linear-gradient(rgba(8, 12, 18, 0.62), rgba(8, 12, 18, 0.78)), url('images/IMG_7310.JPG');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: scroll;
+        }
+
+        .story-bg {
+            background-color: #111a20;
+            background-image: none;
+            background-size: auto;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: scroll;
+        }
+
+        /* Floating AI ordering assistant */
+        .mondo-chat-launcher {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 70;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 18px;
+            border: 2px solid #D4AF37;
+            border-radius: 999px;
+            color: #1a1a1a;
+            background: #D4AF37;
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+        .mondo-chat-launcher:hover {
+            background: #f0cf61;
+            transform: translateY(-2px);
+        }
+        .mondo-chat-launcher svg {
+            width: 20px;
+            height: 20px;
+        }
+        .mondo-chat-panel {
+            position: fixed;
+            right: 24px;
+            bottom: 88px;
+            z-index: 70;
+            display: flex;
+            flex-direction: column;
+            width: min(390px, calc(100vw - 32px));
+            height: min(570px, calc(100vh - 120px));
+            min-height: 390px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            border-radius: 18px;
+            background: #f9f6f0;
+            color: #1a1a1a;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+        }
+        .mondo-chat-panel[hidden] {
+            display: none;
+        }
+        .mondo-chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 18px;
+            color: #f9f6f0;
+            background: #1a1a1a;
+        }
+        .mondo-chat-header strong {
+            display: block;
+            color: #D4AF37;
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+        }
+        .mondo-chat-header small {
+            display: block;
+            margin-top: 2px;
+            color: #cccccc;
+            font-size: 11px;
+        }
+        .mondo-chat-close {
+            width: 30px;
+            height: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 50%;
+            color: #f9f6f0;
+            background: transparent;
+            font-size: 20px;
+            line-height: 1;
+        }
+        .mondo-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            background: #f9f6f0;
+        }
+        .mondo-chat-message {
+            max-width: 88%;
+            margin: 0 0 12px;
+            padding: 10px 12px;
+            border-radius: 4px 14px 14px 14px;
+            color: #1a1a1a;
+            background: #e8e1d4;
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        .mondo-chat-message.user {
+            margin-left: auto;
+            border-radius: 14px 4px 14px 14px;
+            color: #f9f6f0;
+            background: #263d32;
+        }
+        .mondo-chat-message.error {
+            color: #7c2d12;
+            background: #ffedd5;
+        }
+        .mondo-chat-form {
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            border-top: 1px solid #ddd6c8;
+            background: #ffffff;
+        }
+        .mondo-chat-input {
+            min-width: 0;
+            flex: 1;
+            resize: none;
+            padding: 10px 11px;
+            border: 1px solid #cfc7b8;
+            border-radius: 8px;
+            outline: none;
+            color: #1a1a1a;
+            background: #fffdf8;
+            font-size: 13px;
+        }
+        .mondo-chat-input:focus {
+            border-color: #D4AF37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.18);
+        }
+        .mondo-chat-send {
+            align-self: stretch;
+            width: 44px;
+            border: 0;
+            border-radius: 8px;
+            color: #1a1a1a;
+            background: #D4AF37;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        @media (max-width: 640px) {
+            .mondo-chat-launcher {
+                right: 16px;
+                bottom: 16px;
+                padding: 13px 15px;
+            }
+            .mondo-chat-panel {
+                right: 16px;
+                bottom: 78px;
+                width: calc(100vw - 32px);
+                height: min(560px, calc(100vh - 100px));
+            }
+        }
+
+        /* Image hover effect */
+        .img-zoom {
+            overflow: hidden;
+        }
+        .img-zoom img {
+            transition: transform 0.7s ease;
+        }
+        .img-zoom:hover img {
+            transform: scale(1.05);
+        }
+
+        #pizza-slide {
+            opacity: 1;
+            transition: opacity 0.9s ease-in-out, transform 0.9s ease-in-out;
+            transform: none;
+        }
+
+        @media (max-width: 767px) {
+            .hero-bg,
+            .story-bg {
+                background-attachment: scroll;
+            }
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Montserrat, sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.bottom-10{bottom:2.5rem}.bottom-4{bottom:1rem}.left-1\/2{left:50%}.left-4{left:1rem}.right-4{right:1rem}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-10{margin-bottom:2.5rem}.mb-16{margin-bottom:4rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mt-2{margin-top:0.5rem}.mt-5{margin-top:1.25rem}.mt-6{margin-top:1.5rem}.mt-8{margin-top:2rem}.mb-2{margin-bottom:0.5rem}.mb-12{margin-bottom:3rem}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.aspect-\[4\/3\]{aspect-ratio:4/3}.h-1{height:0.25rem}.h-20{height:5rem}.h-6{height:1.5rem}.h-\[420px\]{height:420px}.h-auto{height:auto}.h-10{height:2.5rem}.h-5{height:1.25rem}.min-h-screen{min-height:100vh}.w-24{width:6rem}.w-6{width:1.5rem}.w-full{width:100%}.w-10{width:2.5rem}.w-5{width:1.25rem}.max-w-2xl{max-width:42rem}.max-w-4xl{max-width:56rem}.max-w-5xl{max-width:64rem}.max-w-7xl{max-width:80rem}.flex-shrink-0{flex-shrink:0}.-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes bounce{0%, 100%{transform:translateY(-25%);animation-timing-function:cubic-bezier(0.8,0,1,1)}50%{transform:none;animation-timing-function:cubic-bezier(0,0,0.2,1)}}.animate-bounce{animation:bounce 1s infinite}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-12{gap:3rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-10{gap:2.5rem}.gap-x-12{column-gap:3rem}.gap-y-10{row-gap:2.5rem}.space-x-8 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(2rem * var(--tw-space-x-reverse));margin-left:calc(2rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.space-x-4 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(1rem * var(--tw-space-x-reverse));margin-left:calc(1rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.scroll-smooth{scroll-behavior:smooth}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-sm{border-radius:0.125rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-b-2{border-bottom-width:2px}.border-t{border-top-width:1px}.border-t-4{border-top-width:4px}.border-gold{--tw-border-opacity:1;border-color:rgb(212 175 55 / var(--tw-border-opacity, 1))}.border-white\/10{border-color:rgb(255 255 255 / 0.1)}.bg-black\/20{background-color:rgb(0 0 0 / 0.2)}.bg-cream{--tw-bg-opacity:1;background-color:rgb(249 246 240 / var(--tw-bg-opacity, 1))}.bg-dark{--tw-bg-opacity:1;background-color:rgb(26 26 26 / var(--tw-bg-opacity, 1))}.bg-dark\/95{background-color:rgb(26 26 26 / 0.95)}.bg-gold{--tw-bg-opacity:1;background-color:rgb(212 175 55 / var(--tw-bg-opacity, 1))}.bg-\[\#111111\]{--tw-bg-opacity:1;background-color:rgb(17 17 17 / var(--tw-bg-opacity, 1))}.bg-white\/10{background-color:rgb(255 255 255 / 0.1)}.bg-gradient-to-t{background-image:linear-gradient(to top, var(--tw-gradient-stops))}.from-black\/60{--tw-gradient-from:rgb(0 0 0 / 0.6) var(--tw-gradient-from-position);--tw-gradient-to:rgb(0 0 0 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.via-transparent{--tw-gradient-to:rgb(0 0 0 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), transparent var(--tw-gradient-via-position), var(--tw-gradient-to)}.to-transparent{--tw-gradient-to:transparent var(--tw-gradient-to-position)}.object-cover{object-fit:cover}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.px-8{padding-left:2rem;padding-right:2rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-20{padding-top:5rem;padding-bottom:5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.pb-1{padding-bottom:0.25rem}.pb-12{padding-bottom:3rem}.pb-3{padding-bottom:0.75rem}.pt-2{padding-top:0.5rem}.pt-24{padding-top:6rem}.pb-4{padding-bottom:1rem}.pb-8{padding-bottom:2rem}.pt-16{padding-top:4rem}.pt-8{padding-top:2rem}.text-center{text-align:center}.font-sans{font-family:Montserrat, sans-serif}.font-serif{font-family:Playfair Display, serif}.text-2xl{font-size:1.5rem;line-height:2rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xs{font-size:0.75rem;line-height:1rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.font-bold{font-weight:700}.font-light{font-weight:300}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.italic{font-style:italic}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.tracking-\[0\.15em\]{letter-spacing:0.15em}.tracking-\[0\.2em\]{letter-spacing:0.2em}.tracking-wide{letter-spacing:0.025em}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.text-cream{--tw-text-opacity:1;color:rgb(249 246 240 / var(--tw-text-opacity, 1))}.text-dark{--tw-text-opacity:1;color:rgb(26 26 26 / var(--tw-text-opacity, 1))}.text-gold{--tw-text-opacity:1;color:rgb(212 175 55 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-light_gray{--tw-text-opacity:1;color:rgb(204 204 204 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.opacity-70{opacity:0.7}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.drop-shadow-lg{--tw-drop-shadow:drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.hover\:border-cream:hover{--tw-border-opacity:1;border-color:rgb(249 246 240 / var(--tw-border-opacity, 1))}.hover\:bg-gold:hover{--tw-bg-opacity:1;background-color:rgb(212 175 55 / var(--tw-bg-opacity, 1))}.hover\:text-cream:hover{--tw-text-opacity:1;color:rgb(249 246 240 / var(--tw-text-opacity, 1))}.hover\:text-gold:hover{--tw-text-opacity:1;color:rgb(212 175 55 / var(--tw-text-opacity, 1))}.hover\:text-dark:hover{--tw-text-opacity:1;color:rgb(26 26 26 / var(--tw-text-opacity, 1))}.hover\:opacity-100:hover{opacity:1}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}@media (min-width: 640px){.sm\:w-auto{width:auto}.sm\:flex-row{flex-direction:row}.sm\:px-3{padding-left:0.75rem;padding-right:0.75rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}}@media (min-width: 768px){.md\:mt-16{margin-top:4rem}.md\:mt-0{margin-top:0px}.md\:flex{display:flex}.md\:hidden{display:none}.md\:w-1\/2{width:50%}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:flex-row{flex-direction:row}.md\:flex-row-reverse{flex-direction:row-reverse}.md\:py-32{padding-top:8rem;padding-bottom:8rem}.md\:text-left{text-align:left}.md\:text-5xl{font-size:3rem;line-height:1}.md\:text-6xl{font-size:3.75rem;line-height:1}.md\:text-7xl{font-size:4.5rem;line-height:1}.md\:text-base{font-size:1rem;line-height:1.5rem}.md\:text-xl{font-size:1.25rem;line-height:1.75rem}.md\:text-2xl{font-size:1.5rem;line-height:2rem}}@media (min-width: 1024px){.lg\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.lg\:justify-start{justify-content:flex-start}.lg\:gap-20{gap:5rem}.lg\:gap-4{gap:1rem}.lg\:px-8{padding-left:2rem;padding-right:2rem}.lg\:text-left{text-align:left}.lg\:text-8xl{font-size:6rem;line-height:1}}</style></head>
+<body class="font-sans bg-dark text-cream antialiased">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 bg-dark/95 border-b border-white/10 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="#" class="font-serif text-2xl tracking-widest text-gold font-bold uppercase">Mondo</a>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#o-nama" class="text-cream hover:text-gold transition-colors text-sm font-medium tracking-wide uppercase">O nama</a>
+                    <a href="#meni" class="text-cream hover:text-gold transition-colors text-sm font-medium tracking-wide uppercase">Meni</a>
+                    <a href="#kontakt" class="text-cream hover:text-gold transition-colors text-sm font-medium tracking-wide uppercase">Kontakt</a>
+                    <a href="tel:+38766802802" class="btn-gold px-5 py-2 rounded-full text-sm font-semibold tracking-wide">Pozovite nas</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-cream hover:text-gold focus:outline-none" aria-expanded="false" aria-label="Toggle menu">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-dark border-t border-white/10">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
+                <a href="#o-nama" class="block px-3 py-2 text-cream hover:text-gold text-base font-medium uppercase tracking-wide">O nama</a>
+                <a href="#meni" class="block px-3 py-2 text-cream hover:text-gold text-base font-medium uppercase tracking-wide">Meni</a>
+                <a href="#kontakt" class="block px-3 py-2 text-cream hover:text-gold text-base font-medium uppercase tracking-wide">Kontakt</a>
+                <a href="tel:+38766802802" class="btn-gold inline-block mt-2 px-5 py-2 rounded-full text-sm font-semibold tracking-wide">Pozovite nas</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-bg min-h-screen flex flex-col justify-center items-center text-center px-4 pt-24 pb-12 relative">
+        <div class="max-w-4xl mx-auto mt-8 md:mt-16">
+            <h2 class="text-gold font-sans tracking-[0.2em] text-sm md:text-base uppercase mb-4">Dobrodošli</h2>
+            <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-tight drop-shadow-lg">
+                Mondo caffe <br>
+                <span class="text-4xl md:text-6xl text-cream italic">&amp; ristorante</span>
+            </h1>
+            <p class="text-lg md:text-xl text-light_gray mb-10 max-w-2xl mx-auto font-light">
+                Vaše omiljeno mjesto u srcu Bijeljine. Savršen spoj vrhunske kafe, odlične hrane i nezaboravnog ambijenta.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="files/mondo-jelovnik.pdf" target="_blank" rel="noopener noreferrer" class="btn-gold-filled px-8 py-3 rounded-full text-sm md:text-base uppercase tracking-wider font-semibold w-full sm:w-auto">Pogledaj Jelovnik</a>
+                <a href="#kontakt" class="btn-gold px-8 py-3 rounded-full text-sm md:text-base uppercase tracking-wider font-semibold w-full sm:w-auto">Rezervacije</a>
+            </div>
+        </div>
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#o-nama" class="text-gold opacity-70 hover:opacity-100">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+            </a>
+        </div>
+    </header>
+
+    <!-- Section 1: Otkrijte Mondo (Dark) -->
+    <section id="o-nama" class="story-bg py-20 md:py-32">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
+                <!-- Text Content (Left) -->
+                <div class="md:w-1/2 text-center md:text-left">
+                    <h4 class="text-gold tracking-[0.15em] text-sm uppercase mb-3 font-semibold">Naša Priča</h4>
+                    <h2 class="font-serif text-4xl md:text-5xl text-cream mb-6 leading-tight">Otkrijte Mondo</h2>
+                    <p class="text-light_gray text-lg mb-8 font-light leading-relaxed">
+                        Započnite dan uz savršenu šoljicu kafe u ugodnom ambijentu našeg lokala. Bilo da planirate jutarnji ritual, brzi poslovni sastanak ili opuštanje sa prijateljima u večernjim satima, Mondo je tu da svaki vaš trenutak učini posebnim.
+                    </p>
+                    <a href="#kontakt" class="inline-block border-b-2 border-gold text-gold pb-1 hover:text-cream hover:border-cream transition-colors text-sm uppercase tracking-widest font-semibold">Posjetite nas</a>
+                </div>
+                <!-- Right: slideshow + preview -->
+                <div class="md:w-1/2 w-full">
+                    <div class="relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-black/20">
+                        <img id="pizza-slide" src="images/IMG_7309.JPG" alt="Mondo pizza preview 6" class="w-full h-[420px] object-cover" style="opacity: 1; transform: scale(1.02);">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-3">
+                            <span class="text-xs uppercase tracking-[0.2em] text-gold">Preview</span>
+                            <span id="slide-index" class="text-sm text-cream">6 / 6</span>
+                        </div>
+                    </div>
+                    <div class="mt-5 flex flex-col sm:flex-row gap-3">
+                        <button id="download-image" class="btn-gold-filled px-6 py-3 rounded-full text-sm uppercase tracking-wider font-semibold">Download image</button>
+                        <button id="download-data" class="btn-gold px-6 py-3 rounded-full text-sm uppercase tracking-wider font-semibold">Download data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Naša Hrana (Cream) -->
+    <section class="bg-cream py-20 md:py-32">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row-reverse items-center gap-12 lg:gap-20">
+                <!-- Text Content (Right) -->
+                <div class="md:w-1/2 text-center md:text-left">
+                    <h4 class="text-gold tracking-[0.15em] text-sm uppercase mb-3 font-semibold">Gastronomija</h4>
+                    <h2 class="font-serif text-4xl md:text-5xl text-dark mb-6 leading-tight">Naša Hrana</h2>
+                    <p class="text-gray-700 text-lg mb-8 font-light leading-relaxed">
+                        Od pažljivo biranih, svježih sastojaka pripremamo ukusna jela za vaš savršen doručak, ručak ili večeru. Probajte naše prepoznatljive autentične paste, hrskave pizze iz peći i bogate obroke kreirane da zadovolje sva vaša čula.
+                    </p>
+                    <a href="files/mondo-jelovnik.pdf" target="_blank" rel="noopener noreferrer" class="btn-dark inline-block px-8 py-3 rounded-full text-sm uppercase tracking-wider font-semibold">Cijeli Jelovnik</a>
+                </div>
+                <!-- Image (Left) -->
+                <div class="md:w-1/2 w-full img-zoom rounded-sm shadow-2xl">
+                    <img id="food-slide" src="images/IMG_7306.JPG" alt="Ukusna hrana i pizza 3" class="w-full h-auto object-cover aspect-[4/3] rounded-sm" style="opacity: 1; transform: scale(1);">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Izdvajamo iz ponude (Menu Grid) -->
+    <section id="meni" class="bg-dark py-20 md:py-32 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h4 class="text-gold tracking-[0.15em] text-sm uppercase mb-3 font-semibold">Meni</h4>
+                <h2 class="font-serif text-4xl md:text-5xl text-cream mb-4">Izdvajamo iz ponude</h2>
+                <div class="w-24 h-1 bg-gold mx-auto mt-6"></div>
+                <p class="text-light_gray text-sm italic mt-6">* Za kompletan jelovnik i kartu pića, obratite se našem osoblju.</p>
+            </div>
+
+            <div id="menu-items-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-12 gap-y-10 max-w-5xl mx-auto">
+            <div class="border-b border-white/10 pb-4">
+                <div class="flex justify-between items-baseline mb-2">
+                    <h3 class="font-serif text-xl md:text-2xl text-cream">Šunka, sir, gljive</h3>
+                    <span class="text-gold font-semibold text-lg">8.00 KM</span>
+                </div>
+                <p class="text-light_gray font-light text-sm">Posebno pripremljeno po recepturi Mondo restorana.</p>
+            </div>
+        
+            <div class="border-b border-white/10 pb-4">
+                <div class="flex justify-between items-baseline mb-2">
+                    <h3 class="font-serif text-xl md:text-2xl text-cream">Gorki List 0,03l</h3>
+                    <span class="text-gold font-semibold text-lg">3.00 KM</span>
+                </div>
+                <p class="text-light_gray font-light text-sm">Posebno pripremljeno po recepturi Mondo restorana.</p>
+            </div>
+        
+            <div class="border-b border-white/10 pb-4">
+                <div class="flex justify-between items-baseline mb-2">
+                    <h3 class="font-serif text-xl md:text-2xl text-cream">Čaj voćni</h3>
+                    <span class="text-gold font-semibold text-lg">2.00 KM</span>
+                </div>
+                <p class="text-light_gray font-light text-sm">Posebno pripremljeno po recepturi Mondo restorana.</p>
+            </div>
+        
+            <div class="border-b border-white/10 pb-4">
+                <div class="flex justify-between items-baseline mb-2">
+                    <h3 class="font-serif text-xl md:text-2xl text-cream">Punjene prženice (šunka, trapist, feta sir, paradajz)</h3>
+                    <span class="text-gold font-semibold text-lg">10.00 KM</span>
+                </div>
+                <p class="text-light_gray font-light text-sm">Posebno pripremljeno po recepturi Mondo restorana.</p>
+            </div>
+        
+            <div class="border-b border-white/10 pb-4">
+                <div class="flex justify-between items-baseline mb-2">
+                    <h3 class="font-serif text-xl md:text-2xl text-cream">Pileći ražnjići (pileći file rolovan u slanini, pomfrit, lepina)</h3>
+                    <span class="text-gold font-semibold text-lg">13.00 KM</span>
+                </div>
+                <p class="text-light_gray font-light text-sm">Posebno pripremljeno po recepturi Mondo restorana.</p>
+            </div>
+        
+            <div class="border-b border-white/10 pb-4">
+                <div class="flex justify-between items-baseline mb-2">
+                    <h3 class="font-serif text-xl md:text-2xl text-cream">Fanta (0,25l)</h3>
+                    <span class="text-gold font-semibold text-lg">3.00 KM</span>
+                </div>
+                <p class="text-light_gray font-light text-sm">Posebno pripremljeno po recepturi Mondo restorana.</p>
+            </div>
+        </div>
+        </div>
+    </section>
+
+<script>
+    const menuText = `
+MONDO – Caffe Pizza & Ristorante
+JENOVNIK / KARTA PIĆA I HRANE
+TOPLI NAPICI
+ * Čaj kamilica – 2,00 KM
+ * Čaj nana – 2,00 KM
+ * Čaj voćni – 2,00 KM
+ * Čaj zeleni – 2,00 KM
+ * Espresso – 2,50 KM
+ * Espresso sa mlijekom – 2,50 KM
+ * Domaća (turska) kafa – 2,00 KM
+ * Nescafe – 3,00 KM
+ * Topla čokolada – 4,00 KM
+ * Kapućino – 3,50 KM
+SOKOVI
+ * Limunada – 3,00 KM
+ * Cijeđena Narandža – 4,00 KM
+ * Cedevita Narandža – 2,50 KM
+ * Cedevita Limun – 2,50 KM
+ * Cedevita Zova – 2,50 KM
+ * Coca Cola (0,25l) – 3,00 KM
+ * Coca Cola Zero (0,25l) – 3,00 KM
+ * Coca Cola Limenka (0,33l) – 3,00 KM
+ * Fanta (0,25l) – 3,00 KM
+ * Schweppes Bitter Lemon (0,25l) – 3,00 KM
+ * Schweppes Tonic (0,25l) – 3,00 KM
+ * Schweppes Pomegranate (0,25l) – 3,00 KM
+ * Schweppes Tangerine (0,25l) – 3,00 KM
+ * Sprite (0,25l) – 3,00 KM
+ * Cockta (0,25l) – 3,00 KM
+ * Vitaminka Jabuka (0,25l) – 3,00 KM
+ * Vitaminka Borovnica (0,25l) – 3,00 KM
+ * Vitaminka Višnja (0,25l) – 3,00 KM
+ * Vitaminka Breskva (0,25l) – 3,00 KM
+ * Sok Ruža (0,33l) – 3,00 KM
+ * Sok Zova (0,33l) – 3,00 KM
+ * Ledeni čaj limenka (0,33l) – 3,00 KM
+ * Multi Sola limenka (0,33l) – 3,00 KM
+ * Orangina (0,25l) – 3,50 KM
+ * Cappy Narandža Limenka (0,33l) – 3,50 KM
+ENERGETSKA PIĆA
+ * Rooster – 4,00 KM
+ * Guarana – 4,00 KM
+ * Red Bull – 5,00 KM
+VINA
+ * Smederevka 0,2l – 3,00 KM
+ * Kratošija 0,2l – 3,00 KM
+ * Alexandrija butelja mala (Crno / Bijelo) 0,187l – 6,00 KM
+ * Kupinovo 0,187l – 5,00 KM
+ * Temjanika Tikveš 0,75l – 25,00 KM
+ * Varijanta Aleksandrović 0,75l – 50,00 KM
+ * Chardonnay Kovačević 0,75l – 50,00 KM
+ŽESTOKA PIĆA
+ * Pelinkovac 0,03l – 3,00 KM
+ * Martini 0,03l – 3,00 KM
+ * Vinjak 0,03l – 3,00 KM
+ * Gorki List 0,03l – 3,00 KM
+ * Vlahov 0,03l – 3,00 KM
+ * Stock 0,03l – 3,00 KM
+ * Johnnie Walker 0,03l – 3,00 KM
+ * Baileys 0,03l – 3,00 KM
+ * Gin Gordons 0,03l – 3,00 KM
+ * Ballantines 0,03l – 3,00 KM
+ * Jack Daniels 0,03l – 4,00 KM
+ * Chivas 0,03l – 5,00 KM
+ * Tequila 0,03l – 3,00 KM
+ * Jegermeister 0,03l – 3,00 KM
+ * Hennessy 0,03l – 3,00 KM
+ * Viljamovka 0,03l – 3,00 KM
+ * Smirnof 0,03l – 3,00 KM
+ * Rakija Šljiva 0,03l – 3,00 KM
+ * Rakija Kajsija 0,03l – 3,00 KM
+ * Rakija Dunja 0,03l – 3,00 KM
+ * Meduška 0,03l – 3,00 KM
+ * Rum 0,03l – 3,00 KM
+PIVO
+ * Točeno pivo malo 0,3l – 2,50 KM
+ * Točeno pivo veliko 0,50l – 4,00 KM
+ * Lav 0,33l – 2,50 KM
+ * Lav Limun 0,33l – 2,50 KM
+ * Tuborg 0,33l – 3,00 KM
+ * Carlsberg 0,33l – 4,00 KM
+ * Budweiser 0,33l – 4,00 KM
+ * Somersby (Jabuka, Kruška, Borovnica, Mango, Zova, Jagoda) 0,33l – 4,00 KM
+DORUČAK
+ * Mondo (3 jaja, 1 kobasica, slanina, gljive, pogačice, pomfrit) – 14,00 KM
+ * Domaćinski (2 jaja, 2 slanine, 2 ćevapa, 2 roštiljske kobasice, uštipci) – 16,00 KM
+ * Bekendeks (3 jaja, slanina, pogačice) – 7,00 KM
+ * Hemendeks (3 jaja, šunka, pogačice) – 7,00 KM
+ * Jaja Kobasica (3 jaja, kranjska kobasica, pogačice) – 7,00 KM
+ * Jaja Suvi vrat (3 jaja, suvi vrat, pogačice) – 7,00 KM
+ * Omlet (3 jaja, pogačice) po izboru (šunka, suvi vrat, kulen, gljive) – 7,00 KM
+ * Uštipci (10 uštipaka, kulen, vrat, pavlaka, svježi sir) – 10,00 KM
+ * Punjene prženice (šunka, trapist, feta sir, paradajz) – 10,00 KM
+SALATE
+ * MONDO (piletina, povrće, tost, dresing) – 10,00 KM
+ * CEZAR (piletina, zel. salata, slanina, tost, dresing) – 10,00 KM
+ * POSNA (tunjevina, zel. salata, luk, tost) – 8,00 KM
+ * ŠOPSKA (povrće, feta sir) – 6,00 KM
+ * PARADAJZ – 4,00 KM
+ * KUPUS – 3,00 KM
+ * MIJEŠANA – 5,00 KM
+DODACI
+ * Pogačice porcija – 2,00 KM
+ * Lepina komad – 2,00 KM
+ * Pomfrit mini (100 gr) – 2,00 KM
+ * Pomfrit mali (200 gr) – 3,00 KM
+ * Pomfrit veliki (300 gr) – 4,00 KM
+ * Pekarski krompir (300 gr) – 4,00 KM
+ * Šampinjon sos – 4,00 KM
+ * Gorgonzola sos – 4,00 KM
+ * Quattro Formaggi sos – 4,00 KM
+SENDVIČI (Gratis 2 priloga)
+(Prilozi 1,00 KM: kečap, majonez, pavlaka, paradajz, krastavci, kupus, zelena salata)
+ * Šunka (šunka, sir trapist) – M: 5,00 KM | V: 6,00 KM
+ * Kulen (kulen, sir trapist) – M: 7,00 KM | V: 9,00 KM
+ * Suvi vrat (suvi vrat, sir trapist) – M: 7,00 KM | V: 9,00 KM
+ * Pečenica (pečenica, sir trapist) – M: 7,00 KM | V: 9,00 KM
+ * Piletina (pileći file na žaru, sir) – M: 7,00 KM | V: 9,00 KM
+ * Pohovana piletina (pohovani file, sir) – M: 8,00 KM | V: 10,00 KM
+ * Index (pečena šunka, gljive, sir) – M: 7,00 KM | V: 9,00 KM
+ * Mondo (vrat, kulen, pečenica, sir) – M: 9,00 KM | V: 11,00 KM
+ * Posni (tunjevina, posni sir) – M: 7,00 KM | V: 9,00 KM
+TOST SENDVIČI
+ * Šunka (tost, šunka, sir, pomfrit) – 7,00 KM
+ * Suvi vrat (tost, suvi vrat, sir, pomfrit) – 8,00 KM
+ * Posni (tost, tunjevina, posni sir, pomfrit) – 8,00 KM
+SLANE PALAČINKE
+ * Šunka, sir, gljive – 8,00 KM
+ * Suvi vrat, sir – 10,00 KM
+ * Kulen, sir – 10,00 KM
+ * Pečenica, sir – 10,00 KM
+ * Bešamel – 15,00 KM
+SLATKE PALAČINKE
+ * Krem, plazma – 5,50 KM
+ * Nutela, plazma – 6,00 KM
+ * Džem – 5,00 KM
+PREDJELO
+ * Hladna plata (kulen, pečenica, suvi vrat, pršut, sir, masline, pogačice) – 20,00 KM
+ * Gljive na žaru (šampinjoni, riža) – 7,00 KM
+ * Carbonara Špagete (pasta, slanina, šunka, jaje, pavlaka) – 10,00 KM
+ * Bolonjeze Špagete (pasta, bolonjeze sos) – 10,00 KM
+ * Rižoto sa Gljivama (riža, šampinjoni, pogačice) – 10,00 KM
+ROŠTILJ
+ * Ćevapi Veliki (10 ćevapa, 1 lepina) – 11,00 KM
+ * Ćevapi Srednji (7 ćevapa, ½ lepine) – 8,00 KM
+ * Ćevapi Mali (5 ćevapa, ½ lepine) – 6,00 KM
+ * Pljeskavica Mala (150 gr) – 8,00 KM
+ * Pljeskavica Velika (200 gr) – 11,00 KM
+ * Punjena pljeskavica (punjenje šunka, sir) – 13,00 KM
+ * Gurmanska pljeskavica (slanina, luk, sir, čili) – 13,00 KM
+ * Pileći ražnjići (pileći file rolovan u slanini, pomfrit, lepina) – 13,00 KM
+ * Miješano meso (piletina, laskare, svinjski vrat, slanina, ćevapi, pljeskavica, ražnjić, roštiljska, pekarski krompir, lepina) – 25,00 KM
+ * Gril plata (2x Miješano meso) – 40,00 KM
+GLAVNA JELA
+ * Piletina punjena u sosu (mala) (punjeno bijelo meso 100gr, šampinjon sos, riža, pogačice) – 10,00 KM
+ * Piletina punjena u sosu (velika) (punjeno bijelo meso 200gr, šampinjon sos, riža, pogačice) – 16,00 KM
+ * Bečka šnicla (laskare 150gr, pomfrit, pogačice) – 14,00 KM
+ * Karađorđeva šnicla velika (laskare 200gr, suvi vrat, svježi sir, pomfrit, pogačice) – 17,00 KM
+ * Karađorđeva šnicla mala (laskare 150gr, suvi vrat, svježi sir, pomfrit, pogačice) – 14,00 KM
+ * Piletina na žaru (pileći file 150gr, pomfrit, pogačice) – 12,00 KM
+ * Pohovana piletina (pileći file 150gr, pomfrit, pogačice) – 15,00 KM
+ * Pileći štapići sa susamom (pileći file 150gr, pomfrit, pogačice) – 17,00 KM
+ * Kari piletina (piletina, gljive sos, riža, pogačice) – 17,00 KM
+ * Piletina u šampinjon sosu (pileći file 150gr, šampinjon sos, riža, pogačice) – 17,00 KM
+ * Piletina Quattro Formaggi (pileći file 150gr, sos 4 vrste sira, riža, pogačice) – 17,00 KM
+ * Oslić (oslić 250gr, krompir salata, pogačice) – 9,00 KM
+ * Riblji štapići (panirani riblji štapići, pomfrit, pogačice) – 9,00 KM
+GOTOVA JELA
+ * Teleća čorba – 7,00 KM
+ * Riblja čorba – 7,00 KM
+ * Pasulj posni (hleb, kupus salata) – 6,00 KM
+ * Pasulj sa kobasicom (hleb, kupus salata) – 8,00 KM
+ * Gulaš juneći (hleb, kupus salata) – 10,00 KM
+PIZZA
+ * Capriciosa (šunka, sir, šampinjoni) – 8,00 KM | 11,00 KM | 19,00 KM
+ * Vesuvio (šunka, sir) – 8,00 KM | 11,00 KM | 19,00 KM
+ * Margherita (sir, paradajz, masline) – 8,00 KM | 11,00 KM | 19,00 KM
+ * Arabbiata (šunka, sir, kulen, šampinjoni, feferoni) – 10,00 KM | 13,00 KM | 21,00 KM
+ * Al Funghi (sir, gljive) – 8,00 KM | 11,00 KM | 19,00 KM
+ * Al Tonno (posni sir, tunjevina, paprika, luk) – 9,00 KM | 12,00 KM | 20,00 KM
+ * Quattro Formaggi (4 vrste sira) – 9,00 KM | 12,00 KM | 20,00 KM
+ * Quattro Stagioni (sir, šunka, šampinjoni, povrće) – 9,00 KM | 12,00 KM | 20,00 KM
+ * Alpska (šunka, sir, slanina, luk, gljive) – 9,00 KM | 12,00 KM | 20,00 KM
+ * Mexicana (šunka, sir, kukuruz šećerac, kulen, feferoni) – 10,00 KM | 13,00 KM | 21,00 KM
+ * Mondo (sir, šunka, vrat, slanina, kulen, gljive, masline, jaje) – 11,00 KM | 14,00 KM | 23,00 KM
+ * Piroška (sir, šunka, pavlaka) – 9,00 KM | 12,00 KM
+ * Calzzona (sir, šunka, gljive) – 9,00 KM | 12,00 KM
+ * Pizza Piletina (sir, piletina, masline, susam) – 10,00 KM | 13,00 KM | 21,00 KM
+ * Pizza Nutela (nutela namaz) – 9,00 KM | 12,00 KM
+ * Pizza Vegetariana (sir, gljive, povrće) – 9,00 KM | 12,00 KM | 20,00 KM
+ * Posna Pizza (posni sir, tunjevina, gljive) – 8,00 KM | 11,00 KM | 19,00 KM
+ * Pica Domaćinska (pršut, suvi vrat, slanina, sir, pavlaka) – 14,00 KM | 16,00 KM | 25,00 KM
+Cijene su izražene u konvertibilnim markama (KM).
+    `;
+
+    function shuffleArray(arr) {
+        const copy = [...arr];
+        for (let i = copy.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+    }
+
+    function parseMenuText(text) {
+        const lines = text
+            .split(/\r?\n/)
+            .map(line => line.replace(/\u00A0/g, ' ').trim())
+            .filter(Boolean);
+
+        const ignored = [
+            'MONDO – Caffe Pizza & Ristorante',
+            'JENOVNIK / KARTA PIĆA I HRANE',
+            'TOPLI NAPICI',
+            'SOKOVI',
+            'ENERGETSKA PIĆA',
+            'VINA',
+            'ŽESTOKA PIĆA',
+            'PIVO',
+            'DORUČAK',
+            'SALATE',
+            'DODACI',
+            'TOST SENDVIČI',
+            'SLANE PALAČINKE',
+            'SLATKE PALAČINKE',
+            'PREDJELO',
+            'ROŠTILJ',
+            'GLAVNA JELA',
+            'GOTOVA JELA',
+            'PIZZA',
+            'Cijene su izražene u konvertibilnim markama (KM).'
+        ];
+
+        const items = [];
+
+        for (const raw of lines) {
+            const line = raw.replace(/^\*\s*/, '').trim();
+
+            if (!line || ignored.includes(line)) continue;
+            if (line.startsWith('(Prilozi') || line.startsWith('(Cijene')) continue;
+
+            let mainLine = line;
+
+            const pipeIndex = mainLine.indexOf('|');
+            if (pipeIndex !== -1) {
+                mainLine = mainLine.slice(0, pipeIndex).trim();
+            }
+
+            const match = mainLine.match(/^(.*?)(?:[–-])\s*(.+)$/);
+            if (!match) continue;
+
+            const name = match[1].trim();
+            const rest = match[2].trim();
+            const priceMatch = rest.match(/(\d+[\.,]\d+)\s*KM/i);
+
+            if (!priceMatch) continue;
+
+            items.push({
+                name,
+                price: Number(priceMatch[1].replace(',', '.')).toFixed(2) + ' KM',
+                description: 'Posebno pripremljeno po recepturi Mondo restorana.'
+            });
+        }
+
+        return items.filter(item => item.name && item.price);
+    }
+
+    function renderMenu(items) {
+        const grid = document.getElementById('menu-items-grid');
+        if (!grid) return;
+
+        const selected = shuffleArray(items).slice(0, Math.min(6, items.length));
+        grid.innerHTML = selected.map(item => `
+            <div class="border-b border-white/10 pb-4">
+                <div class="flex justify-between items-baseline mb-2">
+                    <h3 class="font-serif text-xl md:text-2xl text-cream">${item.name}</h3>
+                    <span class="text-gold font-semibold text-lg">${item.price}</span>
+                </div>
+                <p class="text-light_gray font-light text-sm">${item.description}</p>
+            </div>
+        `).join('');
+    }
+
+    const fallbackItems = [
+        { name: 'Espresso', price: '2.50 KM', description: 'Savršeno pržena 100% Arabica, bogata pjena.' },
+        { name: 'Cappuccino', price: '3.50 KM', description: 'Kremasti cappuccino sa savršenim odnosom mlijeka i kafe.' },
+        { name: 'Mondo doručak', price: '14.00 KM', description: 'Jaja, slanina, gljive, kobasica i pomfrit.' },
+        { name: 'Capriciosa', price: '11.00 KM', description: 'Šunka, sir i šampinjoni na savršeno pečenoj pizzi.' },
+        { name: 'Pasta carbonara', price: '10.00 KM', description: 'Pasta sa slaninom, jajima i pecorino sirom.' },
+        { name: 'Čokoladni souffle', price: '6.00 KM', description: 'Topli desert sa tekućim čokoladnim centrom.' }
+    ];
+
+    const parsedMenu = parseMenuText(menuText);
+    renderMenu(parsedMenu.length ? parsedMenu : fallbackItems);
+</script>
+
+    
+
+    <!-- Footer -->
+    <footer id="kontakt" class="bg-[#111111] border-t-4 border-gold pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12 text-center lg:text-left">
+                
+                <!-- Column 1: Lokacija -->
+                <div>
+                    <h4 class="text-gold font-serif text-xl mb-6">Lokacija</h4>
+                    <p class="text-light_gray leading-relaxed font-light">
+                        Račanska 2<br>
+                        76300 Bijeljina<br>
+                        Republika Srpska, BiH
+                    </p>
+                </div>
+
+                <!-- Column 2: Radno Vrijeme -->
+                <div>
+                    <h4 class="text-gold font-serif text-xl mb-6">Radno Vrijeme</h4>
+                    <ul class="text-light_gray leading-relaxed font-light space-y-2">
+                        <li class="flex justify-between lg:justify-start lg:gap-4">
+                            <span>Pon - Sub:</span>
+                            <span>06:00 - 23:00</span>
+                        </li>
+                        <li class="flex justify-between lg:justify-start lg:gap-4">
+                            <span>Vikend:</span>
+                            <span>06:00 - 24:00</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Kontakt -->
+                <div>
+                    <h4 class="text-gold font-serif text-xl mb-6">Kontakt i Dostava</h4>
+                    <p class="text-light_gray leading-relaxed font-light mb-2">Rezervacije stolova i zaposlenje:</p>
+                    <a href="tel:+38765386167" class="text-xl text-cream hover:text-gold transition-colors block mb-4">+387 65 386 167</a>
+                    
+                    <p class="text-light_gray leading-relaxed font-light mb-2">Naručite dostavu:</p>
+                    <a href="tel:+38766802802" class="text-xl text-cream hover:text-gold transition-colors block">+387 66 802 802</a>
+                </div>
+
+                <!-- Column 4: Društvene Mreže -->
+                <div>
+                    <h4 class="text-gold font-serif text-xl mb-6">Pratite Nas</h4>
+                    <p class="text-light_gray leading-relaxed font-light mb-4">Budite u toku sa našim novostima i specijalnim ponudama.</p>
+                    <div class="flex justify-center lg:justify-start space-x-4">
+                        <!-- Facebook Icon Placeholder -->
+                        <a href="https://www.facebook.com/share/1Y7Deaeoct/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-cream hover:bg-gold hover:text-dark transition-all" aria-label="Facebook">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"></path></svg>
+                        </a>
+                        <!-- Instagram Icon Placeholder -->
+                        <a href="https://www.instagram.com/mondo_bn_?stkn=bWwwbTc0YmFvZGtw&amp;utm_source=qr" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-cream hover:bg-gold hover:text-dark transition-all" aria-label="Instagram">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"></path></svg>
+                        </a>
+                        <!-- Google Review Icon -->
+                        <a href="https://www.google.com/searchviewer/10?svid=CAwSHBIaCgNwdnESE0Nnd3ZaeTh4TW5Gb01uSndOR0kYCg" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-cream hover:bg-gold hover:text-dark transition-all" aria-label="Google Review">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/10 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
+                <p>© <span id="year">2026</span> Caffe Restaurant Mondo Bijeljina. Sva prava zadržana.</p>
+                <p class="mt-2 md:mt-0">Dizajnirano s ljubavlju.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Update copyright year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        if (btn && menu) {
+            btn.addEventListener('click', () => {
+                const isHidden = menu.classList.toggle('hidden');
+                btn.setAttribute('aria-expanded', String(!isHidden));
+            });
+
+            // Close mobile menu when clicking a link
+            const menuLinks = menu.querySelectorAll('a');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menu.classList.add('hidden');
+                    btn.setAttribute('aria-expanded', 'false');
+                });
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!menu.contains(event.target) && !btn.contains(event.target)) {
+                    menu.classList.add('hidden');
+                    btn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
+        // Add a new food photo by writing its file path here.
+        // The browser does NOT scan the folder automatically on a static site.
+        // So every image you want to show must be listed in this array.
+        const foodImages = [
+            'images/IMG_7304.JPG',
+            'images/IMG_7305.JPG',
+            'images/IMG_7306.JPG',
+            'images/IMG_7307.JPG',
+            'images/IMG_7308.JPG',
+            'images/IMG_7309.JPG'
+        ];
+
+        const previewImages = foodImages.slice();
+
+        const pizzaSlide = document.getElementById('pizza-slide');
+        const slideIndex = document.getElementById('slide-index');
+        const foodSlide = document.getElementById('food-slide');
+
+        let currentPizzaIndex = 0;
+        let currentFoodIndex = 0;
+
+        function showPizzaSlide() {
+            const randomIndex = Math.floor(Math.random() * previewImages.length);
+            currentPizzaIndex = randomIndex;
+
+            if (pizzaSlide) {
+                pizzaSlide.style.opacity = '0';
+                pizzaSlide.style.transform = 'scale(1.08)';
+
+                setTimeout(() => {
+                    pizzaSlide.src = previewImages[currentPizzaIndex];
+                    pizzaSlide.alt = 'Mondo pizza preview ' + (currentPizzaIndex + 1);
+                    pizzaSlide.style.opacity = '1';
+                    pizzaSlide.style.transform = 'scale(1.02)';
+                }, 200);
+            }
+
+            if (slideIndex) {
+                slideIndex.textContent = (currentPizzaIndex + 1) + ' / ' + previewImages.length;
+            }
+        }
+
+        function showFoodSlide() {
+            const randomIndex = Math.floor(Math.random() * foodImages.length);
+            currentFoodIndex = randomIndex;
+
+            if (foodSlide) {
+                foodSlide.style.opacity = '0';
+                foodSlide.style.transform = 'scale(1.04)';
+
+                setTimeout(() => {
+                    foodSlide.src = foodImages[currentFoodIndex];
+                    foodSlide.alt = 'Ukusna hrana i pizza ' + (currentFoodIndex + 1);
+                    foodSlide.style.opacity = '1';
+                    foodSlide.style.transform = 'scale(1)';
+                }, 200);
+            }
+        }
+
+        if (pizzaSlide) {
+            showPizzaSlide();
+            setInterval(showPizzaSlide, 3500);
+        }
+
+        if (foodSlide) {
+            showFoodSlide();
+            setInterval(showFoodSlide, 4500);
+        }
+
+        // Download current preview image
+        const downloadImageBtn = document.getElementById('download-image');
+        if (downloadImageBtn && pizzaSlide) {
+            downloadImageBtn.addEventListener('click', () => {
+                const link = document.createElement('a');
+                link.href = pizzaSlide.src;
+                link.download = 'mondo-preview-' + (currentPizzaIndex + 1) + '.jpg';
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            });
+        }
+
+        // Download preview metadata as JSON
+        const downloadDataBtn = document.getElementById('download-data');
+        if (downloadDataBtn && pizzaSlide) {
+            downloadDataBtn.addEventListener('click', () => {
+                const payload = {
+                    title: 'Mondo caffe & ristorante',
+                    location: 'Račanska 2, Bijeljina',
+                    image: pizzaSlide.src,
+                    imageNumber: currentPizzaIndex + 1,
+                    timestamp: new Date().toISOString()
+                };
+
+                const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'mondo-preview-data.json';
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                URL.revokeObjectURL(url);
+            });
+        }
+    </script>
+
+    <!-- Floating AI ordering assistant -->
+    <button id="mondo-chat-launcher" class="mondo-chat-launcher" type="button" aria-controls="mondo-chat-panel" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h8M8 14h5m7-2a8 8 0 01-8 8 8.4 8.4 0 01-3.7-.84L4 20l.84-3.3A8 8 0 1119.9 12z"></path>
+        </svg>
+        <span>Poručite uz AI</span>
+    </button>
+
+    <aside id="mondo-chat-panel" class="mondo-chat-panel" hidden aria-label="Mondo AI asistent">
+        <header class="mondo-chat-header">
+            <div>
+                <strong>Mondo AI</strong>
+                <small>Asistent za poručivanje u Bijeljini</small>
+            </div>
+            <button id="mondo-chat-close" class="mondo-chat-close" type="button" aria-label="Zatvori chat">&times;</button>
+        </header>
+        <div id="mondo-chat-messages" class="mondo-chat-messages" aria-live="polite"></div>
+        <form id="mondo-chat-form" class="mondo-chat-form">
+            <textarea id="mondo-chat-input" class="mondo-chat-input" rows="1" placeholder="Šta biste voleli da poručite?" aria-label="Poruka za Mondo AI"></textarea>
+            <button class="mondo-chat-send" type="submit" aria-label="Pošalji poruku">&uarr;</button>
+        </form>
+    </aside>
+
+    <script>
+        const mondoChatLauncher = document.getElementById('mondo-chat-launcher');
+        const mondoChatPanel = document.getElementById('mondo-chat-panel');
+        const mondoChatClose = document.getElementById('mondo-chat-close');
+        const mondoChatForm = document.getElementById('mondo-chat-form');
+        const mondoChatInput = document.getElementById('mondo-chat-input');
+        const mondoChatMessages = document.getElementById('mondo-chat-messages');
+        const mondoChatHistory = [];
+        const mondoSessionId = window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now());
+        const MONDO_API_BASE_URL = 'https://YOUR-MONDO-SERVICE.onrender.com';
+        const mondoChatApi = window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:1111/api/chat'
+            : MONDO_API_BASE_URL + '/api/chat';
+        let mondoChatBusy = false;
+
+        function addMondoChatMessage(text, role) {
+            const message = document.createElement('div');
+            message.className = 'mondo-chat-message ' + role;
+            message.textContent = text;
+            mondoChatMessages.appendChild(message);
+            mondoChatMessages.scrollTop = mondoChatMessages.scrollHeight;
+            return message;
+        }
+
+        function setMondoChatOpen(isOpen) {
+            mondoChatPanel.hidden = !isOpen;
+            mondoChatLauncher.setAttribute('aria-expanded', String(isOpen));
+            if (isOpen) mondoChatInput.focus();
+        }
+
+        async function sendMondoChatMessage(event) {
+            event.preventDefault();
+            const text = mondoChatInput.value.trim();
+            if (!text || mondoChatBusy) return;
+
+            mondoChatBusy = true;
+            mondoChatInput.value = '';
+            mondoChatInput.style.height = 'auto';
+            addMondoChatMessage(text, 'user');
+            mondoChatHistory.push({ role: 'user', parts: [{ text }] });
+            const typing = addMondoChatMessage('Mondo AI piše...', 'assistant');
+
+            try {
+                const response = await fetch(mondoChatApi, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId: mondoSessionId, message: text, history: mondoChatHistory })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Greška pri povezivanju sa asistentom.');
+                typing.remove();
+                addMondoChatMessage(data.reply, 'assistant');
+                mondoChatHistory.push({ role: 'model', parts: [{ text: data.reply }] });
+                if (data.orderAccepted && data.notificationError) {
+                    addMondoChatMessage('Porudžbina je potvrđena, ali Telegram obaveštenje nije poslato: ' + data.notificationError, 'error');
+                } else if (data.orderAccepted && data.notificationSent) {
+                    addMondoChatMessage('Pregled porudžbine je uspešno poslat u Telegram grupu.', 'assistant');
+                }
+            } catch (error) {
+                typing.remove();
+                mondoChatHistory.pop();
+                const message = error instanceof TypeError
+                    ? 'Ne mogu da se povežem sa serverom. Pokrenite Node server komandom: npm start'
+                    : (error.message || 'Asistent trenutno nije dostupan.');
+                addMondoChatMessage(message, 'error');
+            } finally {
+                mondoChatBusy = false;
+                mondoChatInput.focus();
+            }
+        }
+
+        mondoChatLauncher.addEventListener('click', () => setMondoChatOpen(mondoChatPanel.hidden));
+        mondoChatClose.addEventListener('click', () => setMondoChatOpen(false));
+        mondoChatForm.addEventListener('submit', sendMondoChatMessage);
+        mondoChatInput.addEventListener('input', () => {
+            mondoChatInput.style.height = 'auto';
+            mondoChatInput.style.height = Math.min(mondoChatInput.scrollHeight, 100) + 'px';
+        });
+        mondoChatInput.addEventListener('keydown', event => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                mondoChatForm.requestSubmit();
+            }
+        });
+        addMondoChatMessage('Zdravo! Mogu vam preporučiti jelo i pomoći da poručite dostavu u Bijeljini. Šta želite da poručite?', 'assistant');
+    </script>
+
+</body></html>
