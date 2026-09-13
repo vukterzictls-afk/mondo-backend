@@ -225,4 +225,6 @@ app.post('/api/chat', async (req, res) => {
 app.get('/api/health', (_req, res) => res.json({ ok: true, geminiConfigured: Boolean(model) }));
 app.get('*', (_req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-app.listen(PORT, () => console.log(`Mondo AI server sluša na http://localhost:${PORT}`));
+app.listen(process.env.PORT || 1111, '0.0.0.0', () => {
+  console.log(`Mondo AI server sluša na portu ${process.env.PORT || 1111}`);
+});
