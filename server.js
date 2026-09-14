@@ -309,6 +309,11 @@ app.all('/api/*', (req, res) => {
   res.status(404).json({ error: 'API endpoint not found', path: req.originalUrl });
 });
 
+// SPA fallback for any other client navigation
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // ===================================================
 // 6. GLOBAL ERROR HANDLING MIDDLEWARE
 // ===================================================

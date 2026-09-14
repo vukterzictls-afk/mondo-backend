@@ -1075,12 +1075,10 @@ Cijene su izražene u konvertibilnim markama (KM).
         const mondoChatForm = document.getElementById('mondo-chat-form');
         const mondoChatInput = document.getElementById('mondo-chat-input');
         const mondoChatMessages = document.getElementById('mondo-chat-messages');
-        const mondoChatHistory = [];
-        const mondoSessionId = window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now());
         const MONDO_API_BASE_URL = 'https://mondo-backend-usb0.onrender.com';
-        const mondoChatApi = window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        const mondoChatApi = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
             ? 'http://localhost:1111/api/chat'
-            : MONDO_API_BASE_URL + '/api/chat';
+            : (window.location.origin.includes('onrender.com') ? '/api/chat' : `${MONDO_API_BASE_URL}/api/chat`);
         let mondoChatBusy = false;
 
         function addMondoChatMessage(text, role) {
@@ -1114,25 +1112,25 @@ Cijene su izražene u konvertibilnim markama (KM).
                 const response = await fetch(mondoChatApi, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sessionId: mondoSessionId, message: text, history: mondoChatHistory })
+                    body: JSON.stringify({ message: text, history: mondoChatHistory })
                 });
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.error || 'Greška pri povezivanju sa asistentom.');
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    throw new Error(data.reply || data.error || 'Trenutno ne mogu da se povežem sa asistentom. Molimo pokušajte ponovo kasnije.');
+                }
                 typing.remove();
                 addMondoChatMessage(data.reply, 'assistant');
                 mondoChatHistory.push({ role: 'model', parts: [{ text: data.reply }] });
                 if (data.orderAccepted && data.notificationError) {
-                    addMondoChatMessage('Porudžbina je potvrđena, ali Telegram obaveštenje nije poslato: ' + data.notificationError, 'error');
+                    addMondoChatMessage('Porudžbina je potvrđena, ali obaveštenje nije poslato: ' + data.notificationError, 'error');
                 } else if (data.orderAccepted && data.notificationSent) {
-                    addMondoChatMessage('Pregled porudžbine je uspešno poslat u Telegram grupu.', 'assistant');
+                    addMondoChatMessage('Pregled porudžbine je uspešno poslat u sistem.', 'assistant');
                 }
             } catch (error) {
                 typing.remove();
                 mondoChatHistory.pop();
-                const message = error instanceof TypeError
-                    ? 'Ne mogu da se povežem sa serverom. Pokrenite Node server komandom: npm start'
-                    : (error.message || 'Asistent trenutno nije dostupan.');
-                addMondoChatMessage(message, 'error');
+                const fallbackMessage = 'Trenutno ne mogu da se povežem sa asistentom. Molimo pokušajte ponovo kasnije.';
+                addMondoChatMessage(error.message && error.message !== 'Failed to fetch' ? error.message : fallbackMessage, 'error');
             } finally {
                 mondoChatBusy = false;
                 mondoChatInput.focus();
