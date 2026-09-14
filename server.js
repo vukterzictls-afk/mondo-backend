@@ -13,6 +13,7 @@ const apiKey = process.env.GEMINI_API_KEY;
 
 app.use(express.json({ limit: '64kb' }));
 app.use(express.static(__dirname));
+app.get('/api/health', (req, res) => res.json({ ok: true, geminiConfigured: Boolean(model) }));
 
 const menuText = `
 MONDO CAFFE PIZZA & RISTORANTE - CIJENE U KM/BAM
@@ -222,7 +223,7 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-app.get('/api/health', (_req, res) => res.json({ ok: true, geminiConfigured: Boolean(model) }));
+
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
 app.listen(process.env.PORT || 1111, '0.0.0.0', () => {
