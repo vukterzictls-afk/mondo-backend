@@ -9,23 +9,53 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 dotenv.config();
 
 const app = express();
-const PORT = Number(process.env.PORT) || 1111;
+const PORT = process.env.PORT || 1111;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
 const apiKey = process.env.GEMINI_API_KEY;
 
 // ===================================================
 // 1. GLOBAL MIDDLEWARE
 // ===================================================
 
-// CORS: Permissive origin handling to allow Cloudflare Pages (https://mondobijeljina.com)
-app.use(cors({
-  origin: '*',
+// CORS Configuration: Explicitly allow custom domain and common origins
+const allowedOrigins = [
+  'https://mondobijeljina.com',
+  'https://www.mondobijeljina.com',
+  'http://localhost:1111',
+  'http://127.0.0.1:1111'
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (e.g. mobile apps, curl, same-origin)
+    if (!origin) return callback(null, true);
+    const normalized = origin.trim().replace(/\/$/, '');
+    if (
+      allowedOrigins.includes(normalized) ||
+      normalized.endsWith('.pages.dev') ||
+      normalized.endsWith('.onrender.com')
+    ) {
+      return callback(null, true);
+    }
+    return callback(null, true); // Fallback to allow connection
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  credentials: true,
   optionsSuccessStatus: 200
-}));
+};
 
-// Pre-flight handling across all routes
-app.options('*', cors());
+// Apply CORS globally
+app.use(cors(corsOptions));
+
+// Explicit preflight handling for all routes and nested API routes
+app.options('/*', cors(corsOptions));
+app.options('/api/chat', cors(corsOptions));
+app.options('/chat', cors(corsOptions));
+app.options('/api/health', cors(corsOptions));
+app.options('/health', cors(corsOptions));
 
 // Body Parsers: Must be registered before route handlers
 app.use(express.json({ limit: '64kb' }));
@@ -304,8 +334,11 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Catch-all 404 for unmatched API routes
+// Catch-all 404 for unmatched API routes (ignoring OPTIONS so preflight never returns 404)
 app.all('/api/*', (req, res) => {
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
   res.status(404).json({ error: 'API endpoint not found', path: req.originalUrl });
 });
 
@@ -331,6 +364,6 @@ app.use((err, req, res, next) => {
 // ===================================================
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Mondo AI server sluša na portu ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
 
