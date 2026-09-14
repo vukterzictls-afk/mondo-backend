@@ -10,7 +10,8 @@ const app = express();
 app.use(cors());
 const PORT = Number(process.env.PORT) || 1111;
 const apiKey = process.env.GEMINI_API_KEY;
-app.get('/api/health', (req, res) => res.json({ ok: true, geminiConfigured: Boolean(model) }));
+app.get('/api/health', (req, res) => res.json({ ok: true }));
+app.use(express.json({ limit: '64kb' }));
 app.use(express.json({ limit: '64kb' }));
 app.use(express.static(__dirname));
 
