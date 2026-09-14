@@ -1077,7 +1077,7 @@ Cijene su izražene u konvertibilnim markama (KM).
         const mondoChatMessages = document.getElementById('mondo-chat-messages');
         const mondoChatHistory = [];
         const mondoSessionId = window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now());
-        const MONDO_API_BASE_URL = 'https://YOUR-MONDO-SERVICE.onrender.com';
+        const MONDO_API_BASE_URL = 'https://mondo-backend-usb0.onrender.com';
         const mondoChatApi = window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
             ? 'http://localhost:1111/api/chat'
             : MONDO_API_BASE_URL + '/api/chat';
