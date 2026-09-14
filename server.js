@@ -9,7 +9,7 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 dotenv.config();
 
 const app = express();
-
+const PORT = process.env.PORT || 1111;
 const apiKey = process.env.GEMINI_API_KEY;
 
 // ===================================================
