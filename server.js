@@ -7,7 +7,8 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const app = express();
-app.use(cors());
+app.use(cors()); // Safe and initialized after app is defined
+app.use(express.json({ limit: '64kb' }));
 const PORT = Number(process.env.PORT) || 1111;
 const apiKey = process.env.GEMINI_API_KEY;
 app.get('/api/health', (req, res) => res.json({ ok: true }));
