@@ -4,18 +4,48 @@ const path = require('path');
 const dotenv = require('dotenv');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
+// Load environment variables
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config();
 
 const app = express();
-app.use(cors()); // Safe and initialized after app is defined
-app.use(express.json({ limit: '64kb' }));
 const PORT = Number(process.env.PORT) || 1111;
 const apiKey = process.env.GEMINI_API_KEY;
-app.get('/api/health', (req, res) => res.json({ ok: true }));
-app.use(express.json({ limit: '64kb' }));
-app.use(express.json({ limit: '64kb' }));
-app.use(express.static(__dirname));
 
+// ===================================================
+// 1. GLOBAL MIDDLEWARE
+// ===================================================
+
+// CORS: Permissive origin handling to allow Cloudflare Pages (https://mondobijeljina.com)
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  optionsSuccessStatus: 200
+}));
+
+// Pre-flight handling across all routes
+app.options('*', cors());
+
+// Body Parsers: Must be registered before route handlers
+app.use(express.json({ limit: '64kb' }));
+app.use(express.urlencoded({ extended: true, limit: '64kb' }));
+
+// ===================================================
+// 2. HEALTH CHECK ENDPOINTS (Strictly before static files)
+// ===================================================
+
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ ok: true, status: 'healthy', timestamp: new Date().toISOString() });
+});
+
+app.get('/health', (req, res) => {
+  res.status(200).json({ ok: true, status: 'healthy', timestamp: new Date().toISOString() });
+});
+
+// ===================================================
+// 3. GEMINI AI CONFIGURATION & MENU DATA
+// ===================================================
 
 const menuText = `
 MONDO CAFFE PIZZA & RISTORANTE - CIJENE U KM/BAM
@@ -130,12 +160,27 @@ Da li je ovo vaša konačna porudžbina?
 MENI:
 ${menuText}`;
 
-const model = apiKey ? new GoogleGenerativeAI(apiKey).getGenerativeModel({ model: 'gemini-3.6-flash', systemInstruction }) : null;
-const orderModel = apiKey ? new GoogleGenerativeAI(apiKey).getGenerativeModel({ model: 'gemini-3.6-flash' }) : null;
+const model = apiKey ? new GoogleGenerativeAI(apiKey).getGenerativeModel({ model: 'gemini-2.5-flash', systemInstruction }) : null;
+const orderModel = apiKey ? new GoogleGenerativeAI(apiKey).getGenerativeModel({ model: 'gemini-2.5-flash' }) : null;
 
 function cleanHistory(history) {
   if (!Array.isArray(history)) return [];
-  return history.slice(-20).filter(entry => (entry.role === 'user' || entry.role === 'model') && Array.isArray(entry.parts) && typeof entry.parts[0]?.text === 'string').map(entry => ({ role: entry.role, parts: [{ text: entry.parts[0].text.slice(0, 4000) }] }));
+  return history.slice(-20).map(entry => {
+    if (!entry || typeof entry !== 'object') return null;
+    const role = entry.role === 'assistant' || entry.role === 'model' ? 'model' : 'user';
+    let text = '';
+    if (Array.isArray(entry.parts) && typeof entry.parts[0]?.text === 'string') {
+      text = entry.parts[0].text;
+    } else if (typeof entry.text === 'string') {
+      text = entry.text;
+    } else if (typeof entry.content === 'string') {
+      text = entry.content;
+    } else if (typeof entry.message === 'string') {
+      text = entry.message;
+    }
+    if (!text) return null;
+    return { role, parts: [{ text: text.slice(0, 4000) }] };
+  }).filter(Boolean);
 }
 
 function addressIsInBijeljina(address) {
@@ -190,17 +235,25 @@ async function sendKitchenNotification(order) {
   return payload;
 }
 
-app.post('/api/chat', async (req, res) => {
-  const { message, history = [] } = req.body || {};
-  if (typeof message !== 'string' || !message.trim()) return res.status(400).json({ error: 'Poruka ne može biti prazna.' });
-  if (!model) return res.status(503).json({ error: 'Gemini nije konfigurisan. Dodajte GEMINI_API_KEY u .env fajl.' });
+// ===================================================
+// 4. API CHAT ROUTE HANDLERS
+// ===================================================
 
-  if (clearlyOutsideBijeljina(message)) {
-    return res.json({ reply: 'Nažalost, dostava je dostupna samo na području Bijeljine. Porudžbinu možete preuzeti u restoranu Mondo na adresi Račanska 2, Bijeljina.' });
-  }
-
-  const priorHistory = cleanHistory(history).filter(entry => entry.parts[0].text !== message).slice(-19);
+async function handleChat(req, res) {
   try {
+    const { message, history = [] } = req.body || {};
+    if (typeof message !== 'string' || !message.trim()) {
+      return res.status(400).json({ reply: 'Poruka ne može biti prazna.' });
+    }
+    if (!model) {
+      return res.status(503).json({ reply: 'Gemini asistent trenutno nije konfigurisan na serveru. Dodajte GEMINI_API_KEY u .env fajl.' });
+    }
+
+    if (clearlyOutsideBijeljina(message)) {
+      return res.json({ reply: 'Nažalost, dostava je dostupna samo na području Bijeljine. Porudžbinu možete preuzeti u restoranu Mondo na adresi Račanska 2, Bijeljina.' });
+    }
+
+    const priorHistory = cleanHistory(history).filter(entry => entry.parts[0].text !== message).slice(-19);
     const chat = model.startChat({ history: priorHistory });
     const result = await chat.sendMessage(message.trim());
     const reply = result.response.text();
@@ -208,26 +261,71 @@ app.post('/api/chat', async (req, res) => {
     const confirmation = hasSummary && /^(da|potvrđujem|potvrđujem porudžbinu|jeste|može|moze|potvrda)\b/i.test(message.trim());
     let notificationSent = false;
     let notificationError = null;
+
     if (confirmation) {
       const order = await extractOrder([...priorHistory, { role: 'user', parts: [{ text: message.trim() }] }]);
       if (order && addressIsInBijeljina(order.deliveryAddress) && order.customerPhone) {
-        try { await sendKitchenNotification(order); notificationSent = true; } catch (error) { notificationError = error.message; console.error('Kitchen notification failed:', error.message); }
+        try {
+          await sendKitchenNotification(order);
+          notificationSent = true;
+        } catch (error) {
+          notificationError = error.message;
+          console.error('Kitchen notification failed:', error.message);
+        }
       }
     }
-    res.json({ reply, orderAccepted: confirmation, notificationSent, notificationError });
+
+    return res.json({ reply, orderAccepted: confirmation, notificationSent, notificationError });
   } catch (error) {
-    console.error('Gemini request failed:', error.message);
-    const detail = String(error.message || 'Nepoznata Gemini greška.').replace(apiKey || '', '[redigovano]');
-    const responseMessage = process.env.NODE_ENV === 'production'
-      ? 'Trenutno ne mogu da odgovorim. Pokušajte ponovo za trenutak.'
-      : `Gemini greška: ${detail}`;
-    res.status(502).json({ error: responseMessage });
+    console.error('Chat handler error:', error.message);
+    return res.status(500).json({ reply: 'Došlo je do greške.' });
   }
+}
+
+// Support both /api/chat (standard) and /chat
+app.post('/api/chat', handleChat);
+app.post('/chat', handleChat);
+
+// Friendly GET response for testing in browser or monitoring
+app.get('/api/chat', (req, res) => {
+  res.json({ ok: true, message: 'Mondo Chat API is operational. Send POST request with message & history.' });
+});
+app.get('/chat', (req, res) => {
+  res.json({ ok: true, message: 'Mondo Chat API is operational. Send POST request with message & history.' });
 });
 
+// ===================================================
+// 5. STATIC FILES & CLIENT SERVING (After all API routes)
+// ===================================================
 
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.use(express.static(__dirname));
 
-app.listen(process.env.PORT || 1111, '0.0.0.0', () => {
-  console.log(`Mondo AI server sluša na portu ${process.env.PORT || 1111}`);
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
+
+// Catch-all 404 for unmatched API routes
+app.all('/api/*', (req, res) => {
+  res.status(404).json({ error: 'API endpoint not found', path: req.originalUrl });
+});
+
+// ===================================================
+// 6. GLOBAL ERROR HANDLING MIDDLEWARE
+// ===================================================
+
+app.use((err, req, res, next) => {
+  console.error('Unhandled server error:', err);
+  if (res.headersSent) {
+    return next(err);
+  }
+  res.status(500).json({ reply: 'Došlo je do greške na serveru.' });
+});
+
+// ===================================================
+// 7. START SERVER
+// ===================================================
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Mondo AI server sluša na portu ${PORT}`);
+});
+
