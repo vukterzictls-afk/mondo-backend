@@ -9,10 +9,7 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 1111;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
-});
+
 const apiKey = process.env.GEMINI_API_KEY;
 
 // ===================================================
